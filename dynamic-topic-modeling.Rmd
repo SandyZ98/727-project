@@ -1,13 +1,12 @@
 ---
-title: "Dynamic Topic Model "
-author: "Jacy;CD"
-date: "2020/11/21"
+title: "Understanding College Students Concerns during COVID-19 in Michigan"
+author: "Jacy Li;Chendi Zhao"
+date: "2020/12/6"
 output:
   word_document: default
-  pdf_document: default
-  html_document:
-    df_print: paged
+  html_document: default
 ---
+
 #set up
 ```{r include=F}
 if(!require(stm)) install.packages("stm")
@@ -27,7 +26,8 @@ library(ggplot2)
 ```
 #load files
 ```{r include=FALSE,message=FALSE}
-setwd("C:/Users/赵晨笛/Desktop/DATA 727/all data")
+#setwd("C:/Users/赵晨笛/Desktop/DATA 727/all data")
+setwd("C:/Users/jacyli/Box/727")
 data<-read.csv("pooleddata.csv")
 
 ```
@@ -49,106 +49,74 @@ vocab <- out$vocab
 meta <-out$meta
 
 ```
-```{r}
-#The utility function plotRemoved will plot the number of words and documents removed for different thresholds.
-plotRemoved(processed$documents, lower.thresh = seq(1, 200, by = 100))
-```
-# Estimate the STM
 
-
-#A feature of the stm function is that “prevalence” can be expressed as a formula that can include multiple covariates and factorial or continuous covariates(in our case:time).
+# Estimate the STM 
 ```{r results='hide'}
-redditPrevFit <- stm(documents = out$documents, 
+redditFit <- stm(documents = out$documents, 
                        vocab =out$vocab,
                        K = 20,
-                       prevalence =~mode+s(created_utc),
-                       max.em.its = 75, data = out$meta,
+                       prevalence =~ratio+s(created_utc),
+                       max.em.its = 50, data = out$meta,
                        init.type = "Spectral")
 
 ```
 
-
-#Understand: Interpreting the STM by plotting and inspecting results
-#Understanding topics through words and example documents
-# poprotion; weighted: log(); ns();bs()
 ```{r}
-labelTopics(redditPrevFit, 1:20)
+labelTopics(redditFit, 1:20)
+
 ```
 
 #Estimating metadata and topic relationships
 ```{r results='hide'}
-prep <- estimateEffect(1:20 ~ mode+s(created_utc), 
-                       redditPrevFit,
+prep_prev <- estimateEffect(1:20 ~ratio+s(created_utc), 
+                       redditFit,
                        meta = out$meta, 
                        uncertainty = "Global")
 
 ```
 
-
-#Visualize: Presenting STM results
-
+#Visualizaton: Presenting STM results
 
 #1.estimated topic proportions
 ```{r}
-plot(redditPrevFit, type = "summary", xlim = c(0, 0.3))
+plot(redditFit, type = "summary", xlim = c(0,0.3))
+
 ```
 
-#2. Graphical display of topic prevalence, Take the example of Topic 2
-```{r}
-plot(prep, 
+#2. Graphical display of topic prevalence
+```{r fig.height =5, fig.width = 10}
+plot(prep_prev, 
      "created_utc", 
       method = "continuous", 
-      topics =2,
-      model = z, 
-      printlegend = FALSE, 
-      xais = "n", 
-      xlab = "Time(2020)")
-monthseq <- seq(from = as.Date("2020-03-01"),to = as.Date("2020-11-01"), by = "month")
-monthnames <- months(monthseq)
-axis(1,at = as.numeric(monthseq) - min(as.numeric(monthseq)),labels = monthnames)
+      topics =c(2,3,4,5,11),
+     ci.level=F,
+      printlegend = TRUE,
+      xaxt = "n", 
+      xlab = "time",
+      ylim = c(0,0.15))
 
-
+plot(prep_prev, 
+     "created_utc", 
+      method = "continuous", 
+      topics =c(9,12,13),
+      ci.level=F,
+      printlegend = TRUE,
+      xaxt = "n", 
+      xlab = "time")
 ```
-
-
+# Estimate the STM with content 
 ```{r results='hide'}
-RedditContent <- stm(out$documents, 
-                       out$vocab, 
-                     K = 20,
-                     prevalence =~mode+s(created_utc), 
-                     content =~mode,
-                     max.em.its = 75,
-                     data = out$meta, 
-                     init.type = "Spectral")
+redditFit_c <- stm(documents = out$documents, 
+                       vocab =out$vocab,
+                       K = 20,
+                       prevalence =~ratio+s(created_utc),
+                       content = ~mode,
+                       max.em.its = 50, data = out$meta,
+                       init.type = "Spectral")
+
 ```
 
-
-# 3.Graphical display of topical contrast within and between topics
 ```{r}
-plot(RedditContent, type = "perspectives", topics = 11)
-
-plot(RedditContent, type = "perspectives", topics = c(2,11))
-```
-
-#5 Effect of the covariate
-```{r}
-plot(prep, 
-     covariate = "mode", 
-     topics = c(2,5,11,19),
-     model = redditPrevFit, 
-     method = "difference",
-     cov.value1 = "Remote",
-     cov.value2 = "Hybrid",
-     xlab = "Remote ... Hybrid",
-     main = "Effect of Teaching Mode",
-     xlim = c(-.1, .1),
-     labeltype = "custom",
-     custom.labels = c('2', '5','11','19'))
-  
-```
-
-# 5.wordclouds
-```{r}
-cloud(redditPrevFit, topic = 11, scale = c(2,.25))
+labelTopics(redditFit_c, 1:20)
 
 ```
