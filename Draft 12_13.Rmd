@@ -1,0 +1,247 @@
+---
+title: "Draft1"
+author: "Jacy;CD"
+date: "2020/12/14"
+output: html_document
+---
+# SET UP
+```{r packages}
+library(stm)
+library(quanteda)
+library(lubridate)
+library(RTextTools)
+library(igraph)
+library(wordcloud)
+library(ggplot2)
+library(tidyverse)
+library(tidytext)
+install.packages("tidytext")
+```
+```{r load files}
+setwd("C:/Users/赵晨笛/Desktop/DATA 727/all data")
+setwd("C:/Users/jacyli/Box/727")
+data<-read.csv("pooleddata.csv")
+```
+# 1.Introduction
+# 2.Literature Review
+# 3.Data Source and Method
+## 3.1 Data Collection
+## 3.2 Model Specification
+```{r Data preparing}
+processed <- textProcessor(data$selftext, metadata = data)
+out <- prepDocuments(processed$documents,
+                     processed$vocab,
+                     processed$meta, 
+                     lower.thresh = 15)
+docs <- out$documents
+vocab <- out$vocab
+meta <-out$meta
+```
+```{r Models}
+M1<-stm(documents = out$documents, 
+                       vocab =out$vocab,
+                       K = 20,
+                       prevalence =~ratio+s(created_utc),
+                       max.em.its = 50, data = out$meta,
+                       init.type = "Spectral")
+M2<-stm(documents = out$documents, 
+                       vocab =out$vocab,
+                       K = 20,
+                       prevalence =~ratio+s(created_utc),
+                       content = ~mode,
+                       max.em.its = 50, data = out$meta,
+                       init.type = "Spectral")
+
+```
+# 4.Results
+```{r prepare}
+out$meta$ID <- seq.int(nrow(out$meta))
+theta <- data.frame(M1$theta)
+theta$ID <- seq.int(nrow(theta))
+all <- merge(out$meta[,-c(1:2)], theta)
+all %>% 
+  select(ID, created_utc, starts_with('X'))
+all_1 <- gather(data = all, key = topic, value = theta, starts_with('X'), factor_key=TRUE)
+
+```
+##4.1 Topic Summary
+```{r Table3 topic summary}
+labelTopics(M1, 1:20)
+
+#proportion
+por<-all_1 %>% 
+  group_by(topic) %>% 
+  summarize(avg_theta = mean(theta))
+```
+##4.2 Prevalence
+```{r preparing}
+prep_M1 <- estimateEffect(1:20 ~ratio+s(created_utc), 
+                       M1,
+                       meta = out$meta, 
+                       uncertainty = "Global")
+```
+
+
+
+
+
+
+
+```{r Figure2 group 1}
+group1<-all_1 %>% 
+  filter(topic==c("X2","X10","X11","X14","X16","X19"))%>%
+  group_by(month, topic) %>% 
+  summarize(total = n(),
+            med_theta = median(theta),
+            avg_theta = mean(theta))
+group1%>% 
+  ggplot(aes(x=month,y=avg_theta,color=topic)) +
+  geom_line() +
+  labs(x = 'Month', y = 'Topic Prevalence')+
+  theme(legend.position = "bottom")+    
+  scale_color_discrete(name="Group1",                            
+                       labels=c("school reopen",                                                 "outside-covid", 
+                                 "school-covid test",
+                                 "course-technology",
+                                 "course-housekeeping",
+                                "course-mode and registeration"))+
+  ggtitle('Figure 2 Group1')
+
+
+```
+
+```{r Figure3 group 2}
+group2<-all_1 %>% 
+  filter(topic==c("X3","X5","X9","X12","X13","X17","X18"))%>%
+  group_by(month, topic) %>% 
+  summarize(total = n(),
+            med_theta = median(theta),
+            avg_theta = mean(theta))
+group2%>% 
+  ggplot(aes(x=month,y=avg_theta,color=topic)) +
+  geom_line() +
+  labs(x = 'Month', y = 'Topic Prevalence') +
+  theme(legend.position = "bottom")+
+  scale_color_discrete(name="Group2",                            
+                       labels=c("social life-action",                                                       "social life-covid", 
+                                 "social life-place",
+                                 "financials -funding",
+                                 "mental health",
+                                "financials -(lost)job",
+                                 "housing"))+
+  ggtitle('Figure 3 Group2')
+
+group2_1<-all_1 %>% 
+  filter(topic==c("X3","X5","X9"))%>%
+  group_by(month, topic) %>% 
+  summarize(total = n(),
+            med_theta = median(theta),
+            avg_theta = mean(theta))
+group2_1%>% 
+  ggplot(aes(x=month,y=avg_theta,color=topic)) +
+  geom_line() +
+  labs(x = 'Month', y = 'Topic Prevalence') +
+  theme(legend.position = "bottom")+
+  scale_color_discrete(name="Group2_1",                            
+                       labels=c("social life-action",                                                       "social life-covid", 
+                                 "social life-place"))+
+  ggtitle('Figure3_1 Group2_1')
+ 
+group2_2<-all_1 %>% 
+  filter(topic==c("X12","X13","X17","X18"))%>%
+  group_by(month, topic) %>% 
+  summarize(total = n(),
+            med_theta = median(theta),
+            avg_theta = mean(theta))
+
+group2_2%>% 
+  ggplot(aes(x=month,y=avg_theta,color=topic)) +
+  geom_line() +
+  labs(x = 'Month', y = 'Topic Prevalence') +
+  theme(legend.position = "bottom")+
+  scale_color_discrete(name="Group2_2",                            
+                       labels=c("financials -funding",
+                                 "mental health",
+                                "financials -(lost)job",
+                                 "housing"))+
+  ggtitle('Figure3_2 Group2_2')
+
+```
+
+
+```{r Figure4 group 3}
+group3<-all_1 %>% 
+  filter(topic==c("X1","X6","X8"))%>%
+  group_by(month, topic) %>% 
+  summarize(total = n(),
+            med_theta = median(theta),
+            avg_theta = mean(theta))
+group3%>% 
+  ggplot(aes(x=month,y=avg_theta,color=topic)) +
+  geom_line() +
+  labs(x = 'Month', y = 'Topic Prevalence')+ 
+  theme(legend.position = "bottom")+
+  scale_color_discrete(name="Group3",                            
+                       labels=c("election","strike","admission"))+
+  ggtitle('Figure 4 Group3')
+
+
+```
+##4.3 Content
+```{r topics}
+labelTopics(M2, 1:20)
+```
+
+```{r}
+prep_M2<- estimateEffect(1:20 ~ratio+s(created_utc)+mode, 
+                       M2,
+                       meta = out$meta, 
+                       uncertainty = "Global")
+
+summary(prep_M2)
+
+```
+
+```{r Table5}
+por_2<-all_1 %>% 
+  group_by(topic) %>% 
+  summarize(avg_theta = mean(theta))%>%
+  .[-c(1,2,6,8,9,10,11),]
+
+a<-ifelse(por_2$topic=="X4"|por_2$topic=="X5"|por_2$topic=="X12"|por_2$topic=="X14"|por_2$topic=="X19",-1,1)
+por_2$avf_theta_2<-por_2$avg_theta*a
+
+ggplot(data = por_2,aes(x = topic, y =avf_theta_2)) + 
+  geom_bar(stat = 'identity', 
+           fill = ifelse(por_2$avf_theta_2>0,'gold','gray40'), 
+           width = 0.9) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  theme(axis.line.x = element_line())+
+  labs(x = 'Topic', y = 'Remote----Proportion----Hybrid')+
+  coord_flip()
+
+```
+# 5. Discussion 
+# 6. Conclusion 
+#Appendix
+```{r porpotion}
+plot(M1, type = "summary", xlim = c(0,0.3),text.cex=0.6)
+```
+
+
+```{r}
+plot(prep_M2, 
+     covariate = "mode", 
+     topics = c(1:20),
+     model = M2, 
+     method = "difference",
+     cov.value1 = "remote",
+     cov.value2 = "hybrid",
+     xlab = "remote ... hybrid",
+     main = "Effect of mode",
+     xlim = c(-.1, .1),
+     labeltype = "custom")
+```
+
+
