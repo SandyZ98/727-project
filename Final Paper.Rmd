@@ -1,10 +1,14 @@
 ---
 title: 'Understanding College Students COVID-19 Response: A Structural Topic Model
   Approach using Reddit Data'
-author: "Jacy Li & Chendi Zhao"
-date: "2020/12/16"
+subtitle: "Term paper"
+author: "Jacy Li and Chendi Zhao"
+date: "`r Sys.Date()`"
 output:
-  word_document
+  pdf_document:
+    toc: yes
+    df_print: kable
+bibliography: references.bib
 ---
 # SET UP
 
@@ -39,7 +43,7 @@ Figure 1. Daily new cases in MI (Bartkowiak, 2020)
 
 [![RN4BUROEOFF4JKJZYL6R2SCXNY](https://www.clickondetroit.com/resizer/lOUsbi-0u7adlL9XA9XiP3kenHQ=/1600x948/smart/filters:format(jpeg):strip_exif(true):strip_icc(true):no_upscale(true):quality(65)/cloudfront-us-east-1.images.arcpublishing.com/gmg/RN4BUROEOFF4JKJZYL6R2SCXNY.png)
 
-    Despite previous studies, where analysis deals with responses to options from pre-established categories, this study contributes to the literature of COVID-19 student experience by analyzing organic, self-reported data from social media. Besides, most surveys introduce hypothetical bias as subjects' responses are measured under hypothetical scenarios (Murphy et al., 2005). Reddit, the self-proclaimed "front page of the Internet" with its unique feature of subreddits, offers timely, continuous public data at almost no cost, allowing the study of smaller geographies and rarer subpopulations.
+    Despite previous studies, where analysis deals with responses to options from pre-established categories, this study contributes to the literature of COVID-19 student experience by analyzing organic, self-reported data from social media. Besides, most surveys introduce hypothetical bias as subjects' responses are measured under hypothetical scenarios [@murphy_meta-analysis_2005]. Reddit, the self-proclaimed "front page of the Internet" with its unique feature of subreddits, offers timely, continuous public data at almost no cost, allowing the study of smaller geographies and rarer subpopulations.
   
     Therefore,  our study aims to understand Michigan college students’ response to the COVID-19  pandemic collected from subreddits of universities in the state of  Michigan. The rest of the paper is structured as follows: summary of related work can be found in Section2.the methodology to explore data is presented in Section 3, the experiments and results in Section 4. Conclusion and final recommendations are presented in Section 5.
 
@@ -47,9 +51,9 @@ Figure 1. Daily new cases in MI (Bartkowiak, 2020)
 
 # 2.Related Work
 
-    In the United States, researchers paid particular attention to the most impacted students, medical students (and trainees), and have explored the COVID-19 impacts on their career perceptions (Byrnes et al., 2020) and responses to distance learning strategies (Chen et al., 2020; Gallagher & Schleyer, 2020). For the general student body, Aucejo et al. (2020) administered surveys to approximately 1500 students in a public university. Their study shows that the school shutdowns caused by COVID-19 could exacerbate existing achievement gaps resulting from heterogeneous economic and health burdens among students. Similarly, Chetty et al. (2020) found that students from indigent ZIP codes perform even poorly on an online math program.
+    In the United States, researchers paid particular attention to the most impacted students, medical students (and trainees), and have explored the COVID-19 impacts on their career perceptions [@byrnes_effect_2020] and responses to distance learning strategies [@chen_student_2020;@gallagher_we_2020]. For the general student body, @aucejo_impact_2020 administered surveys to approximately 1500 students in a public university. Their study shows that the school shutdowns caused by COVID-19 could exacerbate existing achievement gaps resulting from heterogeneous economic and health burdens among students. Similarly, @chetty_economic_nodate found that students from indigent ZIP codes perform even poorly on an online math program.
   
-    However, previous studies have several drawbacks. One is that most studies focused mainly on the most impacted students, medical students (and trainees), instead of the student group as a whole. Also, social media data was rarely used for analysis. As active users on social media platforms, students’ opinions can be captured quickly and at a low cost. While there are more studies trying to analyze students’ views and behaviors via social media (Mulrennan et al., 2020; Li et al., 2020), we would be able to have a better understanding of the topic and provide more effective means to address students’ concerns and difficulties.
+    However, previous studies have several drawbacks. One is that most studies focused mainly on the most impacted students, medical students (and trainees), instead of the student group as a whole. Also, social media data was rarely used for analysis. As active users on social media platforms, students’ opinions can be captured quickly and at a low cost. While there are more studies trying to analyze students’ views and behaviors via social media [@mulrennan_medical_2020; @li_exploring_2020], we would be able to have a better understanding of the topic and provide more effective means to address students’ concerns and difficulties.
   
     This study explores college students' responses to COVID-19 emergency management and the variability across time and teaching modes (remote vs. hybrid) in Michigan. With datasets scripted from Reddit, we analyzed the content and prevalence of topics using a structural topic modeling (STM) approach. Our research questions are as follows:
     RQ1: What topics have been widely discussed by college students in the state of Michigan during the coronavirus pandemic?
