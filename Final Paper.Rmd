@@ -4,8 +4,7 @@ title: 'Understanding College Students COVID-19 Response: A Structural Topic Mod
 author: "Jacy Li & Chendi Zhao"
 date: "2020/12/16"
 output:
-  word_document:
-    toc:True
+  word_document
 ---
 # SET UP
 
