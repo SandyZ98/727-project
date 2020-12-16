@@ -11,20 +11,18 @@ library(quanteda)
 library(lubridate)
 library(RTextTools)
 library(igraph)
-library(wordcloud)
 library(ggplot2)
 library(tidyverse)
 library(tidytext)
 
 ```
 ```{r load files}
-setwd("C:/Users/赵晨笛/Desktop/DATA 727/all data")
+setwd("C:/Users/Chendi/Desktop/DATA 727/all data")
 data<-read.csv("pooleddata.csv")
-#setwd("C:/Users/jacyli/Box/727")
 ```
 # 1.Introduction
 # 2.Related Work
-# 3.Data and Method
+# 3.Data Source and Methods
 ## 3.1 Data Collection
 ## 3.2 Model Specification
 ```{r Data preparing}
@@ -37,6 +35,7 @@ docs <- out$documents
 vocab <- out$vocab
 meta <-out$meta
 ```
+
 ```{r Models}
 M1<-stm(documents = out$documents, 
                        vocab =out$vocab,
@@ -53,7 +52,7 @@ M2<-stm(documents = out$documents,
                        init.type = "Spectral")
 
 ```
-# 4.Results
+# 4.Results and Discussion
 ```{r prepare}
 out$meta$ID <- seq.int(nrow(out$meta))
 theta <- data.frame(M1$theta)
@@ -73,7 +72,7 @@ por<-all_1 %>%
   group_by(topic) %>% 
   summarize(avg_theta = mean(theta))
 ```
-##4.2 Prevalence
+##4.2 Topic Prevalence Analysis
 ```{r preparing}
 prep_M1 <- estimateEffect(1:20 ~ratio+s(created_utc), 
                        M1,
@@ -107,7 +106,6 @@ group1%>%
                                 "T19 course\n-mode and registeration"))+
   ggtitle('Figure 2')
 
-?theme
 ```
 
 ```{r Figure3-4 }
@@ -149,27 +147,7 @@ group2_2%>%
 
 ```
 
-
-```{r Figure4 group 3}
-group3<-all_1 %>% 
-  filter(topic==c("X1","X6","X8"))%>%
-  group_by(month, topic) %>% 
-  summarize(total = n(),
-            med_theta = median(theta),
-            avg_theta = mean(theta))
-group3%>% 
-  ggplot(aes(x=month,y=avg_theta,color=topic)) +
-  geom_line() +
-  labs(x = 'Month', y = 'Topic Prevalence')+ 
-  scale_x_continuous(breaks=c(3,5,7,9))+
-  theme(legend.position = "bottom")+
-  scale_color_discrete(name="Group3",                            
-                       labels=c("election","strike","admission"))+
-  ggtitle('Figure 4 Group3')
-
-
-```
-##4.3 Content
+##4.3 Topic Content Analysis 
 ```{r topics}
 labelTopics(M2, 1:20)
 ```
@@ -181,7 +159,6 @@ prep_M2<- estimateEffect(1:20 ~ratio+s(created_utc)+mode,
                        uncertainty = "Global")
 
 summary(prep_M2)
-
 ```
 
 ```{r Table5 }
@@ -208,11 +185,11 @@ ggplot(data = por_2,aes(x = topic, y =avf_theta_2,fill = as.factor(mode))) +
   coord_flip()
 
 ```
-# 5. Discussion 
-# 6. Conclusion 
+# 5. Conclusion and Implication
+
 #Appendix
 
-```{r fig.height = 10, fig.width =10}
+```{r Figure 1 fig.height = 10, fig.width =10}
 M1_a<-tidy(M1)
 M1_a %>%
   group_by(topic) %>%
@@ -229,10 +206,13 @@ M1_a %>%
        title = "Highest word probabilities for each topic",
        subtitle = "Different words are associated with different topics")
 
+```
+
+```{r Figure 2 fig.height = 10, fig.width =10}
+
 M1_b<- tidytext::tidy(M1, matrix = "theta")
 ggplot(M1_b, aes(y=gamma, x=as.factor(topic))) +
   geom_histogram(alpha = 0.8, show.legend = FALSE) +
   facet_wrap(~ topic, ncol = 3) +
   labs(title = "Distribution of document probabilities for each topic",
        y = "Number of documents", x = expression(theta))
-```
