@@ -27,10 +27,10 @@ library(tidytext)
 setwd("C:/Users/Chendi/Desktop/DATA 727/all data")
 data<-read.csv("pooleddata.csv")
 ```
-#Abstract:
+# Abstract
 This study focuses on college students' responses to COVID-19 emergency management and the variability across time and groups in Michigan. Using Reddit data, we collect organic submissions in text formats from corresponding subreddits of the ten largest colleges and universities in Michigan for the period of March 1st, 2020, to October 31st, 2020. Taking a structure topic modeling approach, we derive COVID-19 related topics and present the student group's social media landscape. An analysis of topic prevalence and topic content indicates unmet needs on course housekeeping and needs beyond educational requirements. Our study gives school administrators validity to understand student concerns without validating privacy and sheds light on the implications of school emergency management plans on student responses. 
 
-#Keywords
+__Keywords:__
 COVID-19, higher education, concern, response
 
 ***
@@ -55,10 +55,10 @@ Figure 1. Daily new cases in MI [@bartkowiak_coronavirus_2020]
   
     However, previous studies have several drawbacks. One is that most studies focused mainly on the most impacted students, medical students (and trainees), instead of the student group as a whole. Also, social media data was rarely used for analysis. As active users on social media platforms, students’ opinions can be captured quickly and at a low cost. While there are more studies trying to analyze students’ views and behaviors via social media [@mulrennan_medical_2020; @li_exploring_2020], we would be able to have a better understanding of the topic and provide more effective means to address students’ concerns and difficulties.
   
-    This study explores college students' responses to COVID-19 emergency management and the variability across time and teaching modes (remote vs. hybrid) in Michigan. With datasets scripted from Reddit, we analyzed the content and prevalence of topics using a structural topic modeling (STM) approach. Our research questions are as follows:
-    RQ1: What topics have been widely discussed by college students in the state of Michigan during the coronavirus pandemic?
-    RQ2: What were the differences over time?
-    RQ3: What were the discrepancies between universities with different teaching modes?
+    This study explores college students' responses to COVID-19 emergency management and the variability across time and teaching modes (remote vs. hybrid) in Michigan. With datasets scripted from Reddit, we analyzed the content and prevalence of topics using a structural topic modeling (STM) approach. Our research questions are as follows:  
+    RQ1: What topics have been widely discussed by college students in the state of Michigan during the coronavirus pandemic?  
+    RQ2: What were the differences over time?  
+    RQ3: What were the discrepancies between universities with different teaching modes?  
 
 ***
 
@@ -344,7 +344,7 @@ ggplot(data = por_2,aes(x = topic, y =avf_theta_2,fill = as.factor(mode))) +
 
 ***
 
-#Appendix
+# Appendix
 
 ```{r Figure 1 fig.height = 10, fig.width =10,message=FALSE, warning=FALSE}
 M1_a<-tidy(M1)
