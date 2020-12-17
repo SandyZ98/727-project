@@ -145,7 +145,7 @@ all %>% select(ID, created_utc, starts_with('X'))
 all_1 <- gather(data = all, key = topic, value = theta, starts_with('X'), factor_key=TRUE)
 
 ```
-##4.1 Topic Summary
+## 4.1 Topic Summary
 
   Table 3 presents the results from Model 1 which includes only the three prevalence covariates. The first column are the labels summarized based on the keywords in the topics. The researchers each came up with their own lists and discussed the annotation to reach a consensus. The second column is top keywords in the outputs from the model. The third column is the average proportion of the topics in the reference time. Three topics (T7, T15, T20) were removed from the analysis since we believe that they were all related to internal management of the subreddits, such as removing posts.
 
@@ -193,7 +193,7 @@ Table 4. Topic Groups
 |Group 2|Student Actions/Behaviors|T3,T4,T5,T9,T12,T13,T17,T18|
 |Group 3|Time-specific Topics|T1,T6,T8|
 
-##4.2 Topic Prevalence Analysis
+## 4.2 Topic Prevalence Analysis
 ```{r results='hide'}
 prep_M1 <- estimateEffect(1:20 ~ratio+s(created_utc), 
                        M1,
@@ -272,7 +272,7 @@ group2_2%>%
   ggtitle('Figure4')
 ```
 
-##4.3 Topic Content Analysis 
+## 4.3 Topic Content Analysis 
 ```{r results='hide'}
 labelTopics(M2, 1:20)
 ```
