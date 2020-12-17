@@ -1,5 +1,5 @@
 
-# Glossory
+# Glossary
 
 ## paper without code  
   727 Term Paper without code.pdf
