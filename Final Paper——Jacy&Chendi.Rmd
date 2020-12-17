@@ -4,8 +4,6 @@ title: 'Understanding College Students COVID-19 Response: A Structural Topic Mod
 author: "Jacy Li and Chendi Zhao"
 date: "`r Sys.Date()`"
 output:
-  word_document:
-    toc: yes
   pdf_document:
     toc: yes
     df_print: kable
@@ -26,8 +24,8 @@ library(tidytext)
 ```
 
 ```{r load files }
-setwd("C:/Users/赵晨笛/Desktop/DATA 727/all data")
-data<-read.csv("pooleddata.csv")
+setwd("C:/Users/Chendi/Desktop/DATA 727/all data")
+data<-read.csv("727data.csv")
 ```
 # Abstract
 This study focuses on college students' responses to COVID-19 emergency management and the variability across time and groups in Michigan. Using Reddit data, we collect organic submissions in text formats from corresponding subreddits of the ten largest colleges and universities in Michigan for the period of March 1st, 2020, to October 31st, 2020. Taking a structure topic modeling approach, we derive COVID-19 related topics and present the student group's social media landscape. An analysis of topic prevalence and topic content indicates unmet needs on course housekeeping and needs beyond educational requirements. Our study gives school administrators validity to understand student concerns without validating privacy and sheds light on the implications of school emergency management plans on student responses. 
